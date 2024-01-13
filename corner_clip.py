@@ -10,6 +10,7 @@ panel_thickness = 10
 edge_width = 10
 thickness = 3
 screw_diam = 4
+layer = 0.16
 
 with BuildPart(Plane.XY) as corner_clip:
 	with BuildSketch(Plane.XY) as clip_edges:
@@ -43,25 +44,38 @@ with BuildPart(Plane.XY) as corner_clip:
 	)
 
 	chamfer(
-		corner_clip.faces()
-		.sort_by(Axis.Z)[-1]
-		.edges(),
+		corner_clip.faces().sort_by(Axis.Z)[-1].edges(),
 		1,
 	)
 
 	fillet(
 		corner_clip.edges()
-		.filter_by_position(axis=Axis.Z, minimum=panel_thickness+1, maximum=panel_thickness+thickness-1)
+		.filter_by_position(
+			axis=Axis.Z,
+			minimum=panel_thickness + 1,
+			maximum=panel_thickness + thickness - 1,
+		)
 		.filter_by(Axis.Z, reverse=True),
-		2
+		2,
 	)
 
-	with Locations((0, 0, panel_thickness, thickness)):
-		CounterBoreHole(
-			radius=(screw_diam + 0.6) / 2,
-			counter_bore_radius=(7 + 0.6) / 2,
-			counter_bore_depth=thickness,
+	with Locations((0, 0, panel_thickness + thickness)):
+		Hole(
+			radius=(7 + 0.6) / 2,
+			depth=thickness,
 		)
+	with Locations((0, 0, panel_thickness)):
+		Hole(
+			radius=(screw_diam + 0.6) / 2,
+		)
+	with BuildSketch(Plane((0, 0, panel_thickness))):
+		Rectangle(screw_diam+0.6, screw_diam+0.6)
+	extrude(amount=-layer*2, mode=Mode.SUBTRACT)
+	with BuildSketch(Plane((0, 0, panel_thickness))):
+		Circle((7+0.6)/2)
+		Rectangle(screw_diam+0.6, 8, mode=Mode.INTERSECT)
+	extrude(amount=-layer, mode=Mode.SUBTRACT)
+
 
 lcl = copy(locals())
 for i in lcl.keys():
