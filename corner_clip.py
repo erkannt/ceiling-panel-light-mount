@@ -6,8 +6,8 @@ from copy import copy
 reset_show()
 
 length = 30
-panel_thickness = 10
-edge_width = 10
+panel_thickness = 9
+edge_width = 12
 thickness = 3
 screw_diam = 4
 layer = 0.16
@@ -32,7 +32,7 @@ with BuildPart(Plane.XY) as corner_clip:
 		corner_clip.edges()
 		.filter_by(Axis.Z)
 		.filter_by(lambda e: e.bounding_box().max.Z == panel_thickness + thickness)
-		.sort_by_distance((0, 0, 0))[1:3],
+		.sort_by_distance((0, 0, 0))[0:2],
 		radius=10,
 	)
 
