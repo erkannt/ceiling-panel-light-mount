@@ -46,6 +46,7 @@ with BuildPart(Plane.XY) as corner_clip:
 	chamfer(
 		corner_clip.faces().sort_by(Axis.Z)[-1].edges(),
 		1,
+		angle=50
 	)
 
 	fillet(
@@ -70,11 +71,11 @@ with BuildPart(Plane.XY) as corner_clip:
 		)
 	with BuildSketch(Plane((0, 0, panel_thickness))):
 		Rectangle(screw_diam+0.6, screw_diam+0.6)
-	extrude(amount=-layer*2, mode=Mode.SUBTRACT)
+	extrude(amount=-layer*3, mode=Mode.SUBTRACT)
 	with BuildSketch(Plane((0, 0, panel_thickness))):
 		Circle((7+0.6)/2)
 		Rectangle(screw_diam+0.6, 8, mode=Mode.INTERSECT)
-	extrude(amount=-layer, mode=Mode.SUBTRACT)
+	extrude(amount=-layer*2, mode=Mode.SUBTRACT)
 
 
 lcl = copy(locals())
