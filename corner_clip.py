@@ -72,13 +72,13 @@ with BuildPart(Plane.XY) as corner_clip:
         )
     with BuildSketch(Plane((0, 0, total_height - countersink_depth))):
         Rectangle(screw_diam + screw_tol, screw_diam + screw_tol)
-    extrude(amount=-layer * 3, mode=Mode.SUBTRACT)
+    extrude(amount=-layer * 2, mode=Mode.SUBTRACT)
     with BuildSketch(Plane((0, 0, total_height - countersink_depth))):
         Circle((screw_head_diam + screw_tol) / 2),
         Rectangle(
             screw_diam + screw_tol, screw_head_diam + screw_tol, mode=Mode.INTERSECT
         )
-    extrude(amount=-layer * 2, mode=Mode.SUBTRACT)
+    extrude(amount=-layer * 1, mode=Mode.SUBTRACT)
 
 lcl = copy(locals())
 for i in lcl.keys():
