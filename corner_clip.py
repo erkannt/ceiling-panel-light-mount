@@ -1,27 +1,41 @@
-import cadquery as cq
-from cq_server.ui import ui, show_object
+# %%
+from build123d import *
+from ocp_vscode import *
+from copy import copy
+
+length = 30
+panel_thickness = 10
+edge_width = 10
+thickness = 3
+screw_diam = 4
+
+with BuildPart(Plane.XY) as corner_clip:
+	with BuildSketch(Plane.XY) as clip_edges:
+		Rectangle(length, length, align=[Align.MIN, Align.MIN])
+		Circle(screw_diam/2+thickness*2)
+	extrude(amount=panel_thickness + thickness)
+
+	with BuildSketch(Plane.XY) as panel:
+		with Locations((thickness, thickness)):
+			Rectangle(length, length, align=[Align.MIN, Align.MIN])
+	extrude(amount=panel_thickness, mode=Mode.SUBTRACT)
+
+	with BuildSketch(Plane.XY) as panel_light:
+		with Locations((thickness + edge_width, thickness + edge_width)):
+			Rectangle(length, length, align=[Align.MIN, Align.MIN])
+	extrude(amount=panel_thickness + thickness, mode=Mode.SUBTRACT)
+
+	with Locations((0,0, panel_thickness, thickness)):
+		CounterBoreHole(radius=(screw_diam+0.6)/2, counter_bore_radius=(7+0.6)/2, counter_bore_depth=thickness)
+
+reset_show()
+lcl = copy(locals())
+for i in lcl.keys():
+	if isinstance(lcl[i], (BuildPart, BuildSketch, BuildLine)):
+		show_object(lcl[i])
 
 
-corner_length = 30
-panel_height = 10
-thickness = 4
-frame_width = 8
-
-result = (
-  cq.Workplane()
-	.box(corner_length, corner_length, panel_height+thickness)
-	.faces("<Z")
-	.vertices(">XY")
-	.circle(10)
-	.extrude(panel_height+thickness)
-	.faces("<Z")
-	.vertices("<XY")
-	.rect(corner_length-thickness, corner_length-thickness, centered=[0,0])
-	.cutBlind(panel_height)
-	.faces(">Z")
-	.vertices("<XY")
-	.rect(corner_length-thickness-frame_width, corner_length-thickness-frame_width, centered=[0,0])
-	.cutThruAll()
-)
-
-show_object(result)
+# %%
+show(corner_clip)
+corner_clip.part.export_stl("corner_clip.stl")
+# %%
