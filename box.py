@@ -11,9 +11,9 @@ depth = 40
 thick = 2
 
 screw_diam = 4
-screw_head_diam = 7
+screw_head_diam = 8
 screw_tol = 0.6
-countersink_depth = depth-5
+countersink_depth = depth-3
 layer = 0.16
 
 

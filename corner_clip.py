@@ -9,13 +9,13 @@ length = 30
 panel_thickness = 9
 edge_width = 12
 side_thick = 3
-top_thick = 4
+top_thick = 3
 total_height = panel_thickness + top_thick
 
 screw_diam = 4
-screw_head_diam = 7
+screw_head_diam = 8
 screw_tol = 0.6
-countersink_depth = top_thick - 1.5
+countersink_depth = 1.5
 
 layer = 0.16
 
